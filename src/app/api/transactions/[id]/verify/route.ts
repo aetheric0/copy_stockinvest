@@ -5,7 +5,7 @@ import Account from "@/lib/models/account"
 import { verifyToken } from "@/lib/auth"
 import { findIncomingTransactionToAddress } from "@/lib/blockchain"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
   await connectDB()
 
   // Authenticate
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { id } = await params
+  const { id } = await context.params
   const { searchParams } = new URL(req.url)
   const currency = searchParams.get("currency") as "BTC" | "USDT"
   const minAmount = Number.parseFloat(searchParams.get("minAmount") || "0")
