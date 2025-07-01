@@ -5,10 +5,17 @@ import Account from "@/lib/models/account"
 import { verifyToken } from "@/lib/auth"
 import { findIncomingTransactionToAddress } from "@/lib/blockchain"
 
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+type RouteContext = {
+  params: {
+    id: string
+  }
+}
+
+export async function GET(req: NextRequest, context: RouteContext) {
   await connectDB()
 
-  // Authenticate
+  const { id } = context.params
+
   const cookie = req.cookies.get("authToken")?.value
   if (!cookie) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -21,7 +28,6 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { id } = await context.params
   const { searchParams } = new URL(req.url)
   const currency = searchParams.get("currency") as "BTC" | "USDT"
   const minAmount = Number.parseFloat(searchParams.get("minAmount") || "0")
