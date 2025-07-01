@@ -15,7 +15,7 @@ interface QuickActionMenuProps {
   className?: string
 }
 
-export default function QuickActionMenu({ className }: QuickActionMenuProps) {
+export default function QuickActionMenu({}: QuickActionMenuProps) {
   const router = useRouter()
   const { state, handleQuickAction, closeModal } = useTransaction()
   const [dropdownOpen, setDropdownOpen] = useState(false)

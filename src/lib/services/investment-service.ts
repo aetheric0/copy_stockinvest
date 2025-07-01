@@ -186,9 +186,9 @@ export async function getAccountSummary(userId: string) {
   const usdtValue = account.balances.USDT * currencyRates.USDT
   const usdValue = account.balances.USD
 
-  const active = account.investments.filter((i) => i.status === "active")
-  const completed = account.investments.filter((i) => i.status === "completed")
-  const totalValue = btcValue + usdtValue + usdValue + active.reduce((sum, i) => sum + i.currentValue, 0)
+  const active = account.investments.filter((i: InvestmentData) => i.status === "active")
+  const completed = account.investments.filter((i: InvestmentData) => i.status === "completed")
+  const totalValue = btcValue + usdtValue + usdValue + active.reduce((sum: number, i: InvestmentData) => sum + i.currentValue, 0)
 
   return {
     totalValue,

@@ -31,7 +31,7 @@ export default function AccountPage() {
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
-  const { theme, setTheme} = useTheme()
+  const { setTheme} = useTheme()
   const [prefs, setPrefs] = useState<Preferences>(user?.preferences ?? {
     defaultCurrency: "USD",
     theme: "system",

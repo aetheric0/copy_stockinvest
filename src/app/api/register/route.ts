@@ -77,12 +77,18 @@ export async function POST(req: NextRequest) {
             },
             { status: 201 }
         );
-    } catch (error: any) {
-        console.error('Registration failed:', error);
+    }   catch (error: unknown) {
+            console.error('Registration failed:', error);
 
-        // Handle Mongoose validation errors
-        if (error?.name === 'ValidationError') {
-            const errors = Object.values(error.errors).map((err: any) => err.message);
+            if (
+                error &&
+                typeof error === 'object' &&
+                (error as { name?: string }).name === 'ValidationError'
+            ) {
+            const errObj = error as {
+                errors: Record<string, { message: string }>
+            };
+            const errors = Object.values(errObj.errors).map((err) => err.message);
             return NextResponse.json(
                 { message: 'Registration failed due to validation errors', errors },
                 { status: 400 }

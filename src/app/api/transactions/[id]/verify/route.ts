@@ -4,7 +4,6 @@ import Transaction from "@/lib/models/transaction"
 import Account from "@/lib/models/account"
 import { verifyToken } from "@/lib/auth"
 import { findIncomingTransactionToAddress } from "@/lib/blockchain"
-import mongoose from "mongoose"
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   await connectDB()

@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from 'next/server';
 import connectDB from '@/lib/db';
 import User from '@/lib/models/user';
 import jwt from 'jsonwebtoken';
-import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -76,7 +75,7 @@ export async function POST(req: NextRequest) {
         });
         return response// 200 OK
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Login failed:', error);
         return NextResponse.json({ error: 'Something went wrong during login' }, { status: 500 });
     }

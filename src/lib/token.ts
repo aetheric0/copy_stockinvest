@@ -26,6 +26,7 @@ export function verifyResetToken(token: string): TokenPayload {
     const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload
     return decoded
   } catch (error) {
+    console.error('Error decoding token: ', error)
     throw new Error("Invalid or expired token")
   }
 }

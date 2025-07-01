@@ -63,6 +63,10 @@ export async function POST(req: Request) {
 
     // 5. Verify the update
     const updatedUser = await User.findById(user._id).select('+password');
+    if (!updatedUser) {
+      throw new Error("Updated user not found after saving");
+    }
+
     const passwordMatches = await bcrypt.compare(password, updatedUser.password);
 
     console.log("Verification results:", {
@@ -80,13 +84,21 @@ export async function POST(req: Request) {
       message: "Password has been reset successfully",
     });
 
-  } catch (error: any) {
-    console.error("Reset password error:", {
-      message: error.message,
-      stack: error.stack
-    });
+  } catch (error: unknown) {
+    let message = "Failed to reset password";
+
+    if (error instanceof Error) {
+      message = error.message;
+      console.error("Reset password error:", {
+        message: error.message,
+        stack: error.stack,
+      });
+    } else {
+      console.error("Unknown reset password error:", error);
+    }
+
     return NextResponse.json(
-      { error: error.message || "Failed to reset password" },
+      { error: message },
       { status: 500 }
     );
   }

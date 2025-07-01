@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
-import { ArrowUpRight, Wallet } from "lucide-react"
+// import { ArrowUpRight, Wallet } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"

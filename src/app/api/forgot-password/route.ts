@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       message: "Reset link sent to your email" 
     });
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("FORGOT PASSWORD ERROR:", error);
     return NextResponse.json(
       { error: "Something went wrong" }, 

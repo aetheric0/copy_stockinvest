@@ -72,7 +72,7 @@ const MenuItemContent = ({ entry, collapsed }: { entry: SideBarRoute; collapsed:
   )
 }
 
-export function AppSidebar({ collapsed, className, toggleSidebar }: AppSidebarProps) {
+export function AppSidebar({ collapsed, className }: AppSidebarProps) {
   const { user, loading, error } = useUser()
 
   const renderRoutes = (routes: SideBarRoute[]) => {

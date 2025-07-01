@@ -9,7 +9,7 @@ interface Testimonial {
   quote: string
   author: string
   role: string
-  company: string
+  company?: string
   rating: number
   avatar: string
 }
@@ -31,7 +31,6 @@ const testimonials: Testimonial[] = [
       "I've tried several investment platforms, but this one stands out with its intuitive interface and powerful analytics. My investment strategy has completely transformed.",
     author: "Emily Chen",
     role: "Retail Investor",
-    company: "",
     rating: 5,
     avatar: "/placeholder.svg?height=80&width=80",
   },
@@ -52,27 +51,29 @@ export function TestimonialSection() {
   const [isAnimating, setIsAnimating] = useState(false)
 
   const nextTestimonial = () => {
-    if (isAnimating) return
-    setIsAnimating(true)
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
+    if (!isAnimating) {
+      setIsAnimating(true)
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
+    }
   }
 
   const prevTestimonial = () => {
-    if (isAnimating) return
-    setIsAnimating(true)
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length)
+    if (!isAnimating) {
+      setIsAnimating(true)
+      setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length)
+    }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(false)
-    }, 500)
+    const timer = setTimeout(() => setIsAnimating(false), 500)
     return () => clearTimeout(timer)
   }, [currentIndex])
 
+  const testimonial = testimonials[currentIndex]
+
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">What Our Investors Say</h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -80,43 +81,51 @@ export function TestimonialSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl"
-            >
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
-                  />
-                ))}
-              </div>
+        {/* Testimonial Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl text-center">
+          <div className="flex justify-center mb-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={`h-5 w-5 ${i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+              />
+            ))}
+          </div>
 
-              <p className="text-gray-700 dark:text-gray-300 mb-6 italic">"{testimonial.quote}"</p>
+          <p className="text-gray-700 dark:text-gray-300 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
 
-              <div className="flex items-center">
-                <div className="mr-4">
-                  <Image
-                    src={testimonial.avatar || "/placeholder.svg"}
-                    alt={testimonial.author}
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                </div>
-                <div>
-                  <h4 className="font-bold dark:text-white">{testimonial.author}</h4>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {testimonial.role}
-                    {testimonial.company && `, ${testimonial.company}`}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+          <div className="flex flex-col items-center">
+            <Image
+              src={testimonial.avatar}
+              alt={testimonial.author}
+              width={60}
+              height={60}
+              className="rounded-full mb-2"
+            />
+            <h4 className="font-bold dark:text-white">{testimonial.author}</h4>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              {testimonial.role}
+              {testimonial.company ? `, ${testimonial.company}` : ""}
+            </p>
+          </div>
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={prevTestimonial}
+            disabled={isAnimating}
+            className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={nextTestimonial}
+            disabled={isAnimating}
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
 
         <div className="mt-12 text-center">

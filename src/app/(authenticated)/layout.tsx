@@ -5,7 +5,7 @@ import React, { useState } from "react"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/AppSidebar"
 import MobileBottomNavBar from "@/components/MobileBottomNavBar"
-import { ChevronLeft, ChevronRight, Menu } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { UserProvider } from "@/contexts/user/user-context"
 import { TransactionProvider } from "@/contexts/transaction/transaction-context"
 import { usePathname } from "next/navigation"
@@ -17,7 +17,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const pageTitle = getPageTitle(pathname)
   const [collapsed, setCollapsed] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <ThemeProvider attribute='class' defaultTheme='light' enableSystem={true}>

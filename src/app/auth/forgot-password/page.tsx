@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { MailIcon } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import ReCAPTCHA from "react-google-recaptcha";
 
 export default function ForgotPasswordPage() {
@@ -18,7 +17,7 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
-  const router = useRouter();
+
 
   type FormData = z.infer<typeof ForgetPasswordSchema>;
 

@@ -13,13 +13,14 @@ import { PLANS } from "@/types/plan"
 import { fetchPortfolioData } from "@/lib/api/portfolio"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useTransaction } from "@/contexts/transaction/transaction-context"
+import type { Investment } from "@/types/investment"
 
 export default function InvestmentsPage() {
   const [showInvestModal, setShowInvestModal] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [activeInvestments, setActiveInvestments] = useState<any[]>([])
-  const [completedInvestments, setCompletedInvestments] = useState<any[]>([])
-  const { state, setSelectedPlan } = useTransaction()
+  const [activeInvestments, setActiveInvestments] = useState<Investment[]>([])
+  const [completedInvestments, setCompletedInvestments] = useState<Investment[]>([])
+  const { setSelectedPlan } = useTransaction()
 
   useEffect(() => {
     const loadPortfolioData = async () => {

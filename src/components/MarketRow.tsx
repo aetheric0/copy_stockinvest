@@ -12,7 +12,7 @@ interface MarketRowProps {
   isFavorite: boolean
 }
 
-export default function MarketRow({ coin, toggleFavorite, isFavorite }: MarketRowProps) {
+export default function MarketRow({ coin }: MarketRowProps) {
   const isPositive = coin.price_change_percentage_24h >= 0
   const bgClass = isPositive
     ? "bg-green-50/50 dark:bg-green-900/50"

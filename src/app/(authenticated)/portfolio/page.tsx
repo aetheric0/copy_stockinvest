@@ -12,7 +12,6 @@ import { fetchPortfolioData, type PortfolioSummary } from "@/lib/api/portfolio"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export default function PortfolioPage() {
-  const [timeframe, setTimeframe] = useState("1W")
   const [portfolioData, setPortfolioData] = useState<PortfolioSummary | null>(null)
   const [loading, setLoading] = useState(true)
 

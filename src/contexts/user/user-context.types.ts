@@ -23,7 +23,7 @@ export type User = {
 export type UserContextType = {
     user: User | null;
     loading: boolean;
-    error: string | null;
+    error: Error | null;
     logout: () => void;
     fetchUser: () => Promise<void>;
 }

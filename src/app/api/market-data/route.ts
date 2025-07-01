@@ -6,7 +6,7 @@ const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/markets'
 const CACHE_TTL = 60 // seconds
 
 let lastFetchTime = 0
-let cachedData: any = null
+let cachedData: unknown = null
 
 // Force dynamic to allow caching logic
 export const dynamic = 'force-dynamic'
@@ -59,7 +59,7 @@ export async function GET() {
         'X-Cache': 'MISS'
       }
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error fetching market data:', err)
     // On exception, fall back to cache or return 500
     if (cachedData) {

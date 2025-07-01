@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, Document, Model } from 'mongoose';
+import mongoose, { Schema, model, Document, Model, Types } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 
@@ -22,7 +22,7 @@ const PreferencesSchema = new Schema(
   { _id: false }
 );
 
-export interface IUser extends Document {
+export interface IUser {
   username: string;
   fullname: string;
   email: string;
@@ -45,7 +45,11 @@ export interface IUser extends Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<IUser>(
+export interface UserDocument extends IUser, Document {
+  _id: Types.ObjectId
+}
+
+const userSchema = new Schema<UserDocument>(
   {
     username: {
       type: String,
@@ -112,7 +116,7 @@ const userSchema = new Schema<IUser>(
 );
 
 // Hash password on save
-userSchema.pre<IUser>('save', async function (next) {
+userSchema.pre<UserDocument>('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {
     const salt = await bcrypt.genSalt(10);
@@ -137,7 +141,7 @@ userSchema.virtual('profileURL').get(function () {
   return `/users/${this.username}`;
 });
 
-const User: Model<IUser> =
-  mongoose.models.User || model<IUser>('User', userSchema);
+const User: Model<UserDocument> =
+  mongoose.models.User || model<UserDocument>('User', userSchema);
 
 export default User;

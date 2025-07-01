@@ -25,6 +25,18 @@ interface PortfolioChartProps {
   isLoading?: boolean
 }
 
+type ChartDataPoint = {
+  date: string
+  Total: number
+  BTC: number
+  USDT: number
+  USD: number
+  Investments: number
+}
+
+type PortfolioHistoryEntry = PortfolioChartProps["portfolioHistory"][number]
+
+
 export default function PortfolioChart({
   portfolioHistory = [],
   totalValue = 0,
@@ -33,14 +45,14 @@ export default function PortfolioChart({
   isLoading = false,
 }: PortfolioChartProps) {
   const [timeframe, setTimeframe] = useState("1W")
-  const [chartData, setChartData] = useState<any[]>([])
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([])
 
   useEffect(() => {
     if (portfolioHistory.length === 0) return
 
     // Process the data based on the selected timeframe
     const now = new Date()
-    let filteredData: any[] = []
+    let filteredData: PortfolioHistoryEntry[] = []
 
     switch (timeframe) {
       case "1D":

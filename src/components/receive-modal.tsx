@@ -6,7 +6,6 @@ import { Copy, CheckCircle2, AlertCircle } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useUser } from "@/contexts/user/user-context"
 
 // Wallet configuration with fallback addresses
 const walletConfig = {
@@ -23,7 +22,6 @@ const walletConfig = {
 }
 
 export default function ReceiveModal() {
-  const { user } = useUser()
   const [currency, setCurrency] = useState<"BTC" | "USDT">("BTC")
   const [isCopied, setIsCopied] = useState(false)
 

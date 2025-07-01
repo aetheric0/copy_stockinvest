@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from "next/server"
 import connectDB from "@/lib/db"
 import Transaction from "@/lib/models/transaction"
 import { verifyToken } from "@/lib/auth"
+import type { ITransaction } from "@/lib/models/transaction"
+import type { FilterQuery } from "mongoose"
 
 export async function POST(req: NextRequest) {
   await connectDB()
@@ -66,7 +68,7 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get("type") // Can be 'deposit', 'withdrawal', or null for all
 
   // Build query
-  const query: any = { user: payload.id }
+  const query: FilterQuery<ITransaction> = { user: payload.id }
   if (type === "deposit" || type === "withdrawal") {
     query.type = type
   }

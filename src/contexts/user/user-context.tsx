@@ -15,7 +15,7 @@ interface UserContextType {
   fetchUser: () => Promise<void>
 }
 
-const UserContext = createContext<UserContextType | null>(null)
+export const UserContext = createContext<UserContextType | null>(null)
 
 export const useUser = () => {
   const context = useContext(UserContext)
@@ -33,7 +33,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const { theme, setTheme } = useTheme()
+  const { setTheme } = useTheme()
 
   const fetchUser = async () => {
     setLoading(true)
@@ -65,7 +65,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       const userData = await login({ email, password })
       setUser(userData)
       setPrefs(userData?.preferences);
-      setTheme(userData.preferences.theme);
+      if (userData?.preferences?.theme) {
+        setTheme(userData.preferences.theme);
+      }
       return userData
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Login failed"))
@@ -142,7 +144,21 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     </UserContext.Provider>
   )
 }
-function setPrefs(preferences: { defaultCurrency: string; theme: "light" | "dark" | "system"; emailNotifications: { marketUpdates: boolean; securityAlerts: boolean; transactionNotifications: boolean; newsletter: boolean; }; } | undefined) {
-  throw new Error("Function not implemented.");
-}
+function setPrefs(preferences?: {
+  defaultCurrency: string
+  theme: "light" | "dark" | "system"
+  emailNotifications: {
+    marketUpdates: boolean
+    securityAlerts: boolean
+    transactionNotifications: boolean
+    newsletter: boolean
+  }
+}) {
+  if (!preferences) return
 
+  try {
+    localStorage.setItem("userPrefs", JSON.stringify(preferences))
+  } catch (e) {
+    console.error("Failed to save preferences to localStorage:", e)
+  }
+}

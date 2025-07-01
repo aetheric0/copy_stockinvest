@@ -2,8 +2,6 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
-import { useUser } from "@/contexts/user/user-context"
 import { useTransaction, walletConfig } from "@/contexts/transaction/transaction-context"
 import { Button } from "@/components/ui/button"
 import { Copy, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react"
@@ -13,8 +11,6 @@ import { PLANS } from "@/types/plan"
 import { AnimatePresence, motion } from "framer-motion"
 
 export default function SendModal() {
-  const { user, loading } = useUser()
-  const router = useRouter()
   const { state, setCurrency, setSelectedPlan, handleCreateTransaction, handleCopyAddress, resetVerification } =
     useTransaction()
 
