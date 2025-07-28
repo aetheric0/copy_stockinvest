@@ -9,6 +9,7 @@ import { QRCodeSVG } from "qrcode.react"
 import * as Select from "@radix-ui/react-select"
 import { PLANS } from "@/types/plan"
 import { AnimatePresence, motion } from "framer-motion"
+import Image from "next/image";
 
 export default function SendModal() {
   const { state, setCurrency, setSelectedPlan, handleCreateTransaction, handleCopyAddress, resetVerification } =
@@ -85,7 +86,7 @@ export default function SendModal() {
               className="h-12 flex items-center justify-center gap-2"
               type="button"
             >
-              <img src={walletConfig[c].image} alt={c} className="w-6 h-6 rounded-full object-contain" />
+              <Image src={walletConfig[c].image} alt={c} className="w-6 h-6 rounded-full object-contain" />
               <span>{c}</span>
             </Button>
           ))}

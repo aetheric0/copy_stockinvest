@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode, useCallback } from "react"
 import { getCurrentUser, login, logout as apiLogout, changePassword as apiChangePassword, type User } from "@/lib/api/auth"
 import { useTheme } from 'next-themes';
 
@@ -35,7 +35,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [error, setError] = useState<Error | null>(null)
   const { setTheme } = useTheme()
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true)
     try {
       const userData = await getCurrentUser()
@@ -52,11 +52,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     } finally {
       setLoading(false)
     }
-  }
+}, [setTheme])
+  
 
   useEffect(() => {
     fetchUser()
-  }, [])
+  }, [fetchUser])
 
   const loginUser = async (email: string, password: string) => {
     setLoading(true)

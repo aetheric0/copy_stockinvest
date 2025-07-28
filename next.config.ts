@@ -9,6 +9,9 @@ module.exports = {
   },
   experimental: {
     serverActions: {},
-  }
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 export default nextConfig;

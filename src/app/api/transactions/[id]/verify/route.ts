@@ -1,21 +1,19 @@
-import { NextResponse, type NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/db"
 import Transaction from "@/lib/models/transaction"
 import Account from "@/lib/models/account"
 import { verifyToken } from "@/lib/auth"
 import { findIncomingTransactionToAddress } from "@/lib/blockchain"
 
-type RouteContext = {
-  params: {
-    id: string
-  }
-}
 
-export async function GET(req: NextRequest, context: RouteContext) {
+// ✅ this is the correct signature for dynamic routes in App Router
+export async function GET(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
   await connectDB()
 
   const { id } = context.params
-
   const cookie = req.cookies.get("authToken")?.value
   if (!cookie) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -37,51 +35,51 @@ export async function GET(req: NextRequest, context: RouteContext) {
   }
 
   try {
-    // Find the transaction
     const transaction = await Transaction.findById(id)
     if (!transaction) {
-      return NextResponse.json({ error: "Transaction not found", status: "failed" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Transaction not found", status: "failed" },
+        { status: 404 }
+      )
     }
 
-    // Check if transaction is already confirmed
     if (transaction.status === "completed") {
       return NextResponse.json({ status: "confirmed", txHash: transaction.txHash })
     }
 
-    // Check if transaction is already marked as failed
     if (transaction.status === "failed") {
       return NextResponse.json({ status: "failed" })
     }
 
-    // Check if transaction is too old (more than 30 minutes)
     const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000)
     if (transaction.initiatedAt < thirtyMinutesAgo && transaction.status === "pending") {
-      // Mark as failed if it's been pending for too long
       transaction.status = "failed"
       await transaction.save()
       return NextResponse.json({ status: "failed" })
     }
 
-    // Verify the transaction on the blockchain
-    const blockchainTx = await findIncomingTransactionToAddress(transaction.address, minAmount, currency)
+    const blockchainTx = await findIncomingTransactionToAddress(
+      transaction.address,
+      minAmount,
+      currency
+    )
 
     if (blockchainTx) {
-      // Update transaction status
       transaction.status = "completed"
       transaction.txHash = blockchainTx.txHash
       transaction.amount = blockchainTx.amount
       transaction.completedAt = new Date(blockchainTx.timestamp)
       await transaction.save()
 
-      // Update user's account balance
-      const account = await Account.findOneAndUpdate(
+      await Account.findOneAndUpdate(
         { user: payload.id },
         {
           $inc: { [`balances.${currency}`]: blockchainTx.amount },
           $push: {
             portfolioHistory: {
               date: new Date(),
-              totalValue: blockchainTx.amount * (currency === "BTC" ? 30000 : 1), // Simple conversion
+              totalValue:
+                blockchainTx.amount * (currency === "BTC" ? 30000 : 1),
               btcValue: currency === "BTC" ? blockchainTx.amount * 30000 : 0,
               usdtValue: currency === "USDT" ? blockchainTx.amount : 0,
               usdValue: 0,
@@ -89,9 +87,8 @@ export async function GET(req: NextRequest, context: RouteContext) {
             },
           },
         },
-        { new: true, upsert: true },
+        { new: true, upsert: true }
       )
-      account.save()
 
       return NextResponse.json({ status: "confirmed", txHash: blockchainTx.txHash })
     }
@@ -99,6 +96,9 @@ export async function GET(req: NextRequest, context: RouteContext) {
     return NextResponse.json({ status: "pending" })
   } catch (error) {
     console.error("Error verifying transaction:", error)
-    return NextResponse.json({ error: "Failed to verify transaction", status: "failed" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to verify transaction", status: "failed" },
+      { status: 500 }
+    )
   }
 }

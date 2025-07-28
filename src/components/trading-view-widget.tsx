@@ -11,6 +11,8 @@ export function TradingViewWidget() {
   useEffect(() => {
     if (!containerRef.current) return
 
+    // Capture the current container to ensure consistent cleanup
+    const container = containerRef.current
     const script = document.createElement("script")
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
     script.type = "text/javascript"
@@ -32,12 +34,13 @@ export function TradingViewWidget() {
       height: "500",
     })
 
-    containerRef.current.appendChild(script)
+    container.appendChild(script)
     setIsLoaded(true)
 
     return () => {
-      if (containerRef.current && script.parentNode) {
-        script.parentNode.removeChild(script)
+      // Use the captured container reference for cleanup
+      if (container && script.parentNode) {
+        container.removeChild(script)
       }
     }
   }, [])

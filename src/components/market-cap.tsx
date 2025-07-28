@@ -1,87 +1,31 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowDown, ArrowUp, RefreshCw } from "lucide-react"
 import { motion } from "framer-motion"
 
 export function MarketCap() {
   const [stocks, setStocks] = useState([
-    {
-      symbol: "AAPL",
-      name: "Apple Inc.",
-      price: 182.63,
-      change: 1.25,
-      marketCap: "2.87T",
-      volume: "58.3M",
-    },
-    {
-      symbol: "MSFT",
-      name: "Microsoft Corp.",
-      price: 415.32,
-      change: 2.47,
-      marketCap: "3.09T",
-      volume: "22.1M",
-    },
-    {
-      symbol: "GOOGL",
-      name: "Alphabet Inc.",
-      price: 173.05,
-      change: -0.83,
-      marketCap: "2.15T",
-      volume: "19.8M",
-    },
-    {
-      symbol: "AMZN",
-      name: "Amazon.com Inc.",
-      price: 182.41,
-      change: 1.05,
-      marketCap: "1.89T",
-      volume: "31.2M",
-    },
-    {
-      symbol: "NVDA",
-      name: "NVIDIA Corp.",
-      price: 924.79,
-      change: -1.23,
-      marketCap: "2.28T",
-      volume: "42.7M",
-    },
-    {
-      symbol: "META",
-      name: "Meta Platforms",
-      price: 474.36,
-      change: 3.21,
-      marketCap: "1.21T",
-      volume: "15.6M",
-    },
-    {
-      symbol: "TSLA",
-      name: "Tesla Inc.",
-      price: 177.58,
-      change: -2.34,
-      marketCap: "565.2B",
-      volume: "92.4M",
-    },
-    {
-      symbol: "BRK.A",
-      name: "Berkshire Hathaway",
-      price: 621340.0,
-      change: 0.78,
-      marketCap: "889.7B",
-      volume: "1.2K",
-    },
+    { symbol: "AAPL", name: "Apple Inc.", price: 182.63, change: 1.25, marketCap: "2.87T", volume: "58.3M" },
+    { symbol: "MSFT", name: "Microsoft Corp.", price: 415.32, change: 2.47, marketCap: "3.09T", volume: "22.1M" },
+    { symbol: "GOOGL", name: "Alphabet Inc.", price: 173.05, change: -0.83, marketCap: "2.15T", volume: "19.8M" },
+    { symbol: "AMZN", name: "Amazon.com Inc.", price: 182.41, change: 1.05, marketCap: "1.89T", volume: "31.2M" },
+    { symbol: "NVDA", name: "NVIDIA Corp.", price: 924.79, change: -1.23, marketCap: "2.28T", volume: "42.7M" },
+    { symbol: "META", name: "Meta Platforms", price: 474.36, change: 3.21, marketCap: "1.21T", volume: "15.6M" },
+    { symbol: "TSLA", name: "Tesla Inc.", price: 177.58, change: -2.34, marketCap: "565.2B", volume: "92.4M" },
+    { symbol: "BRK.A", name: "Berkshire Hathaway", price: 621340.0, change: 0.78, marketCap: "889.7B", volume: "1.2K" },
   ])
 
   const [loading, setLoading] = useState(false)
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     setLoading(true)
 
     // Simulate data refresh with small random changes
     setTimeout(() => {
-      setStocks(
-        stocks.map((stock) => {
+      setStocks((prev) =>
+        prev.map((stock) => {
           const changePercent = (Math.random() * 2 - 1) * 1.5
           const newPrice = stock.price * (1 + changePercent / 100)
           return {
@@ -93,7 +37,7 @@ export function MarketCap() {
       )
       setLoading(false)
     }, 1000)
-  }
+  }, [])
 
   useEffect(() => {
     // Auto refresh every 30 seconds
@@ -102,7 +46,7 @@ export function MarketCap() {
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [stocks])
+  }, [refreshData])
 
   return (
     <section id="markets" className="py-20 md:py-32 bg-muted/30">
