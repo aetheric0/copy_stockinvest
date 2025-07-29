@@ -1,20 +1,16 @@
-import ResetPasswordForm from "@/components/auth/reset-password";
-import { notFound } from "next/navigation";
-
-interface ResetPasswordPageProps {
-  params: {
-    token: string;
-  };
-}
+import ResetPasswordForm from "@/components/auth/reset-password"
+import { notFound } from "next/navigation"
 
 export default async function ResetPasswordPage({
   params,
-}: ResetPasswordPageProps) {
-  const { token } = await params;
+}: {
+  params: Promise<{ token: string }>
+}) {
+  const { token } = await params
 
   if (!token) {
-    return notFound();
+    return notFound()
   }
 
-  return <ResetPasswordForm token={token} />;
+  return <ResetPasswordForm token={token} />
 }
