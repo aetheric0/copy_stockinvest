@@ -84,7 +84,7 @@ export function HeroSection() {
           >
             <div className="relative h-[400px] md:h-[500px] w-full overflow-hidden rounded-lg">
               <Image
-                src="/assets/images/elon1.jpg"
+                src="/assets/images/NYSE_stock_image.png"
                 alt="Investment dashboard"
                 fill
                 className="object-cover"
